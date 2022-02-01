@@ -1,11 +1,21 @@
+var mongoose = require('mongoose')
+var express = require('express')
+var route = require('./routes')
+var bodyParser =require('body-parser')
+mongoose.connect('mongodb+srv://studentdb:studentdb123@mycluster.jtfqi.mongodb.net/Student?retryWrites=true&w=majority').then(()=>{
+    console.log('connected')
 
-var http = require("http");
-http.createServer(function(req,res){
-    res.writeHead(200,{'Content-Type':'text/plain'});
+    app = express();
+    app.use(bodyParser.urlencoded({extended:false}))
+    app.use('/api',route)
+    
+    app.get('/', (req,res)=>{
+        res.sendFile('index.html',{root:__dirname})
+    })
 
-    res.end('Hello World\n');
-}).listen(3000);
-
-console.log('Server is on');
-
-
+    app.listen((process.env.PORT||3000),()=>{
+        console.log('server started')
+    })
+}).catch((e)=>{
+    console.log(e.toString())
+})
